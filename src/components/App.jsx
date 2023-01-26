@@ -1,11 +1,13 @@
-import { Sidebar } from '../components';
+import { Main, Paper, Sidebar } from '../components';
 
 export const App = () => {
   return (
     <div className="app">
       <Sidebar />
 
-      <div>Main</div>
+      <Main>
+        <Paper>Main</Paper>
+      </Main>
     </div>
   );
 };
