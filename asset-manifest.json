@@ -1,16 +1,20 @@
 {
   "files": {
-    "main.css": "/university-practice/static/css/main.70b40fb4.css",
-    "main.js": "/university-practice/static/js/main.3cae6229.js",
-    "static/media/faculties-icon.svg": "/university-practice/static/media/faculties-icon.12acb9717b7065272c8041de24eb490c.svg",
+    "main.css": "/university-practice/static/css/main.4ea15574.css",
+    "main.js": "/university-practice/static/js/main.3f684cd6.js",
+    "static/media/mock-university.svg": "/university-practice/static/media/mock-university.650dfc1db07a57b5376badfdaf40c154.svg",
+    "static/media/delete.svg": "/university-practice/static/media/delete.677d38a82de5abc1f9234f87ea3bf592.svg",
+    "static/media/edit.svg": "/university-practice/static/media/edit.1ccf0f6fedc395fb09177a40acb5b5d3.svg",
     "static/media/mock-user-ava.svg": "/university-practice/static/media/mock-user-ava.dc938224d592de20b85ec3d88f5d791b.svg",
+    "static/media/pin.svg": "/university-practice/static/media/pin.8da6e254540f5c534fe27e4d5af9e0f6.svg",
     "index.html": "/university-practice/index.html",
-    "static/media/university-icon.svg": "/university-practice/static/media/university-icon.55603ce28345549d65a14a63969995e0.svg",
-    "main.70b40fb4.css.map": "/university-practice/static/css/main.70b40fb4.css.map",
-    "main.3cae6229.js.map": "/university-practice/static/js/main.3cae6229.js.map"
+    "static/media/phone.svg": "/university-practice/static/media/phone.c6f983dd4eca048e70183bd671671b90.svg",
+    "static/media/mail.svg": "/university-practice/static/media/mail.fcd39ac88773a1300db151e083154d3e.svg",
+    "main.4ea15574.css.map": "/university-practice/static/css/main.4ea15574.css.map",
+    "main.3f684cd6.js.map": "/university-practice/static/js/main.3f684cd6.js.map"
   },
   "entrypoints": [
-    "static/css/main.70b40fb4.css",
-    "static/js/main.3cae6229.js"
+    "static/css/main.4ea15574.css",
+    "static/js/main.3f684cd6.js"
   ]
 }
