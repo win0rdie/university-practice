@@ -1,4 +1,4 @@
-import { menuConfig } from 'components/constants/menu.config';
+import { menuConfig } from 'constants/menu.config';
 import MenuItem from './MenuItem';
 
 export default function Menu() {
