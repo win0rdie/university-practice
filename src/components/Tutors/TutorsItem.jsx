@@ -3,6 +3,7 @@ import { ColumnItem, Container } from './TutorsItem.styled';
 import PhoneImg from '../../assets/images/phone.svg';
 import MailImg from '../../assets/images/mail.svg';
 import LocationImg from '../../assets/images/pin.svg';
+import PropTypes from 'prop-types';
 
 export default function TutorsItem({
   firstName,
@@ -42,3 +43,13 @@ export default function TutorsItem({
     </Paper>
   );
 }
+
+TutorsItem.propTypes = {
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
+  patronymic: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  options: PropTypes.string,
+  email: PropTypes.string.isRequired,
+};

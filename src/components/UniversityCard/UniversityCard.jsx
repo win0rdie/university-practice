@@ -1,8 +1,12 @@
-import css from './UniversityCard.module.css';
+import PropTypes from 'prop-types';
+
 import { Paper } from 'components';
+
 import UniversityImg from '../../assets/images/mock-university.svg';
 import EditImg from '../../assets/images/edit.svg';
 import DeleteImg from '../../assets/images/delete.svg';
+
+import css from './UniversityCard.module.css';
 
 export default function UniversityCard({ name, onEdit, onDelete }) {
   return (
@@ -33,3 +37,9 @@ export default function UniversityCard({ name, onEdit, onDelete }) {
     </Paper>
   );
 }
+
+UniversityCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
