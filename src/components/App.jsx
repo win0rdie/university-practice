@@ -1,4 +1,6 @@
 import {
+  Button,
+  GeneralCardList,
   Main,
   Paper,
   Section,
@@ -8,6 +10,8 @@ import {
 } from '../components';
 import universityData from '../constants/universityData';
 import TutorIcon from '../assets/images/teachers-emoji.png';
+import CityIcon from '../assets/images/cities.svg';
+import AddIcon from '../assets/images/add.svg';
 
 export const App = () => {
   const onEdit = () => {
@@ -16,6 +20,14 @@ export const App = () => {
 
   const onDelete = () => {
     console.log('delete');
+  };
+
+  const handleShowForm = () => {
+    console.log('form');
+  };
+
+  const handleToogleMenu = () => {
+    console.log('card');
   };
 
   return (
@@ -33,8 +45,16 @@ export const App = () => {
             <span>{universityData.description}</span>
           </Paper>
         </Section>
-        <Section title="Information about tutors" image={TutorIcon}>
+        <Section title="Tutors" image={TutorIcon}>
           <TutorsList tutors={universityData.tutors} />
+          <Button text="Add tutor" image={AddIcon} action={handleShowForm} />
+        </Section>
+        <Section title="Cities" image={CityIcon}>
+          <GeneralCardList
+            listData={universityData.cities}
+            isOpenMenu={handleToogleMenu}
+          />
+          <Button text="Add city" image={AddIcon} />
         </Section>
       </Main>
     </div>
