@@ -1,7 +1,7 @@
 // import PropTypes from 'prop-types'
 import { Button } from 'components';
 import { Field, Form, Formik } from 'formik';
-import { object, string, number, date, InferType } from 'yup';
+import { object, string } from 'yup';
 import { ErrMsg } from './TutorForm.styled';
 
 const schemaValidation = object({
