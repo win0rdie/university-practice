@@ -5,58 +5,100 @@ import {
   Paper,
   Section,
   Sidebar,
+  TutorForm,
   TutorsList,
   UniversityCard,
 } from '../components';
 import universityData from '../constants/universityData';
 import TutorIcon from '../assets/images/teachers-emoji.png';
 import CityIcon from '../assets/images/cities.svg';
+import DepartmentIcon from '../assets/images/faculties-emoji.png';
 import AddIcon from '../assets/images/add.svg';
+import { Component } from 'react';
 
-export const App = () => {
-  const onEdit = () => {
+export class App extends Component {
+  state = {
+    tutors: universityData?.tutors ?? [],
+    cities: universityData.cities.map(city => ({ text: city })) ?? [],
+    departments:
+      universityData.department.map(({ name }) => ({ text: name })) ?? [],
+  };
+
+  addTutor = tutor => {
+    this.setState(({ tutors }) => ({ tutors: [...tutors, tutor] }));
+  };
+
+  deleteTutor = emailInput => {
+    this.setState(({ tutors }) => {
+      console.log([...tutors]);
+      return {
+        tutors: [...tutors].filter(({ email }) => email !== emailInput),
+      };
+    });
+  };
+
+  onEdit = () => {
     console.log('edit');
   };
 
-  const onDelete = () => {
+  onDelete = () => {
     console.log('delete');
   };
 
-  const handleShowForm = () => {
+  handleShowForm = () => {
     console.log('form');
   };
 
-  const handleToogleMenu = () => {
+  handleToogleMenu = () => {
     console.log('card');
   };
+  render() {
+    const { tutors, cities, departments } = this.state;
+    // console.log(this.state.cities);
+    return (
+      <div className="app">
+        <Sidebar />
 
-  return (
-    <div className="app">
-      <Sidebar />
-
-      <Main>
-        <Section title="Information about university" isRightPosition isColumn>
-          <UniversityCard
-            name={universityData.name}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          ></UniversityCard>
-          <Paper>
-            <span>{universityData.description}</span>
-          </Paper>
-        </Section>
-        <Section title="Tutors" image={TutorIcon}>
-          <TutorsList tutors={universityData.tutors} />
-          <Button text="Add tutor" image={AddIcon} action={handleShowForm} />
-        </Section>
-        <Section title="Cities" image={CityIcon}>
-          <GeneralCardList
-            listData={universityData.cities}
-            isOpenMenu={handleToogleMenu}
-          />
-          <Button text="Add city" image={AddIcon} />
-        </Section>
-      </Main>
-    </div>
-  );
-};
+        <Main>
+          <Section
+            title="Information about university"
+            isRightPosition
+            isColumn
+          >
+            <UniversityCard
+              name={universityData.name}
+              onEdit={this.onEdit}
+              onDelete={this.onDelete}
+            ></UniversityCard>
+            <Paper>
+              <span>{universityData.description}</span>
+            </Paper>
+          </Section>
+          <Section title="Tutors" image={TutorIcon}>
+            <TutorsList tutors={tutors} deleteTutor={this.deleteTutor} />
+            <TutorForm addTutor={this.addTutor} />
+            <Button
+              text="Add tutor"
+              image={AddIcon}
+              action={this.handleShowForm}
+            />
+          </Section>
+          <Section title="Cities" image={CityIcon}>
+            <GeneralCardList
+              listData={cities}
+              isOpenMenu={this.handleToogleMenu}
+            />
+            <Button text="Add city" image={AddIcon} />
+          </Section>
+          <Section title="Departments" image={DepartmentIcon}>
+            <GeneralCardList
+              listData={departments}
+              isOpenMenu={this.handleToogleMenu}
+            />
+            <Button text="Add department" image={AddIcon} />
+          </Section>
+        </Main>
+      </div>
+    );
+  }
+}

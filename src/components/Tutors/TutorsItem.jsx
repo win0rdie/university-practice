@@ -13,6 +13,7 @@ export default function TutorsItem({
   city,
   options,
   email,
+  deleteTutor,
 }) {
   return (
     <Paper>
@@ -38,6 +39,11 @@ export default function TutorsItem({
         </ColumnItem>
         <ColumnItem>
           <p>{options}</p>
+        </ColumnItem>
+        <ColumnItem>
+          <button type="button" onClick={() => deleteTutor(email)}>
+            Delete
+          </button>
         </ColumnItem>
       </Container>
     </Paper>
