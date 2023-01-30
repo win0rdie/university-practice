@@ -6,3 +6,4 @@ export { default as TutorsList } from './Tutors/TutorsList.jsx';
 export { default as Section } from './Section/Section.jsx';
 export { default as Button } from './Button/Button.jsx';
 export { default as GeneralCardList } from './GeneralCard/GeneralCardList.jsx';
+export { default as TutorForm } from './Forms/TutorForm/TutorForm.jsx';
