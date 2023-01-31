@@ -1,4 +1,6 @@
+import { Component } from 'react';
 import {
+  AddItemForm,
   Button,
   GeneralCardList,
   Main,
@@ -14,14 +16,15 @@ import TutorIcon from '../assets/images/teachers-emoji.png';
 import CityIcon from '../assets/images/cities.svg';
 import DepartmentIcon from '../assets/images/faculties-emoji.png';
 import AddIcon from '../assets/images/add.svg';
-import { Component } from 'react';
+import FORMS from 'constants/form';
 
 export class App extends Component {
   state = {
     tutors: universityData?.tutors ?? [],
-    cities: universityData.cities.map(city => ({ text: city })) ?? [],
+    cities: universityData?.cities.map(city => ({ text: city })) ?? [],
     departments:
-      universityData.department.map(({ name }) => ({ text: name })) ?? [],
+      universityData?.department.map(({ name }) => ({ text: name })) ?? [],
+    showForm: false,
   };
 
   addTutor = tutor => {
@@ -45,16 +48,59 @@ export class App extends Component {
     console.log('delete');
   };
 
-  handleShowForm = () => {
-    console.log('form');
+  handleShowForm = formName => {
+    this.setState(prevState => ({
+      showForm: prevState.showForm === formName ? null : formName,
+    }));
   };
 
   handleToogleMenu = () => {
     console.log('card');
   };
+
+  addCity = name => {
+    if (
+      this.state.cities.some(
+        city => city.text.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      alert('City already exists');
+    } else {
+      const newCity = {
+        text: name,
+      };
+      this.setState(prevState => ({
+        cities: [...prevState.cities, newCity],
+      }));
+    }
+  };
+
+  addDepartment = name => {
+    if (
+      this.state.departments.some(
+        department => department.text.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      alert('Department already exists');
+    }
+    // else if (
+    //   this.state.departments.some(department => department.text === '')
+    // ) {
+    //   alert('Input is empty');
+    // }
+    else {
+      const newDepartment = {
+        text: name,
+      };
+      this.setState(prevState => ({
+        departments: [...prevState.departments, newDepartment],
+      }));
+    }
+  };
+
   render() {
-    const { tutors, cities, departments } = this.state;
-    // console.log(this.state.cities);
+    const { tutors, cities, departments, showForm } = this.state;
+
     return (
       <div className="app">
         <Sidebar />
@@ -74,28 +120,59 @@ export class App extends Component {
               <span>{universityData.description}</span>
             </Paper>
           </Section>
+
           <Section title="Tutors" image={TutorIcon}>
             <TutorsList tutors={tutors} deleteTutor={this.deleteTutor} />
-            <TutorForm addTutor={this.addTutor} />
+            {showForm === FORMS.TUTOR_FORM && (
+              <TutorForm addTutor={this.addTutor} />
+            )}
             <Button
-              text="Add tutor"
+              text={showForm === FORMS.TUTOR_FORM ? 'Close form' : 'Add tutor'}
               image={AddIcon}
-              action={this.handleShowForm}
+              action={() => this.handleShowForm(FORMS.TUTOR_FORM)}
             />
           </Section>
+
           <Section title="Cities" image={CityIcon}>
             <GeneralCardList
               listData={cities}
               isOpenMenu={this.handleToogleMenu}
             />
-            <Button text="Add city" image={AddIcon} />
+            {showForm === FORMS.CITY_FORM && (
+              <AddItemForm
+                title="add city"
+                placeholder="City"
+                onSubmit={this.addCity}
+              />
+            )}
+            <Button
+              text={showForm === FORMS.CITY_FORM ? 'Close form' : 'Add city'}
+              image={AddIcon}
+              action={() => this.handleShowForm(FORMS.CITY_FORM)}
+            />
           </Section>
+
           <Section title="Departments" image={DepartmentIcon}>
             <GeneralCardList
               listData={departments}
               isOpenMenu={this.handleToogleMenu}
             />
-            <Button text="Add department" image={AddIcon} />
+            {showForm === FORMS.DEPARTMENT_FORM && (
+              <AddItemForm
+                title="add departments"
+                placeholder="Departments"
+                onSubmit={this.addDepartment}
+              />
+            )}
+            <Button
+              text={
+                showForm === FORMS.DEPARTMENT_FORM
+                  ? 'Close form'
+                  : 'Add department'
+              }
+              image={AddIcon}
+              action={() => this.handleShowForm(FORMS.DEPARTMENT_FORM)}
+            />
           </Section>
         </Main>
       </div>
