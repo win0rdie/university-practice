@@ -1,12 +1,13 @@
 import GeneralCardItem from './GeneralCardItem';
+import { StyledList } from './GeneralCardItem.styled';
 
-export default function GeneralCardList({ listData, isOpenMenu }) {
+export default function GeneralCardList({ listData,  deleteCard }) {
   return (
-    <ul>
+    <StyledList>
       {listData.length &&
-        listData.map(({ text }) => (
-          <GeneralCardItem key={text} text={text} isOpenMenu={isOpenMenu} />
+        listData.map(({ text, relation }) => (
+          <GeneralCardItem id={text} key={text} relation={relation} text={text} deleteCard={deleteCard} />
         ))}
-    </ul>
+    </StyledList>
   );
 }
