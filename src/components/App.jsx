@@ -21,15 +21,24 @@ import FORMS from 'constants/form';
 export class App extends Component {
   state = {
     tutors: universityData?.tutors ?? [],
-    cities: universityData?.cities.map(city => ({ text: city, relation: 'cities' })) ?? [],
+    cities:
+      universityData?.cities.map(city => ({
+        text: city,
+        relation: 'cities',
+      })) ?? [],
     departments:
-      universityData?.department.map(({ name }) => ({ text: name, relation: 'departments' })) ?? [],
-    showForm: false,
-
+      universityData?.department.map(({ name }) => ({
+        text: name,
+        relation: 'departments',
+      })) ?? [],
+    showForm: null,
   };
 
   addTutor = tutor => {
-    this.setState(({ tutors }) => ({ tutors: [...tutors, tutor] }));
+    this.setState(({ tutors }) => ({
+      tutors: [...tutors, tutor],
+      showForm: null,
+    }));
   };
 
   deleteTutor = emailInput => {
@@ -72,6 +81,7 @@ export class App extends Component {
       };
       this.setState(prevState => ({
         cities: [...prevState.cities, newCity],
+        showForm: null,
       }));
     }
   };
@@ -95,14 +105,16 @@ export class App extends Component {
       };
       this.setState(prevState => ({
         departments: [...prevState.departments, newDepartment],
+        showForm: null,
       }));
     }
   };
-handleDeleteCard = (id, relation) => {
-  this.setState((prevState)=>({
-    [relation]: prevState[relation].filter(({text})=>text !== id)
-  }))
-}
+
+  handleDeleteCard = (id, relation) => {
+    this.setState(prevState => ({
+      [relation]: prevState[relation].filter(({ text }) => text !== id),
+    }));
+  };
 
   render() {
     const { tutors, cities, departments, showForm } = this.state;
