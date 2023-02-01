@@ -21,10 +21,11 @@ import FORMS from 'constants/form';
 export class App extends Component {
   state = {
     tutors: universityData?.tutors ?? [],
-    cities: universityData?.cities.map(city => ({ text: city })) ?? [],
+    cities: universityData?.cities.map(city => ({ text: city, relation: 'cities' })) ?? [],
     departments:
-      universityData?.department.map(({ name }) => ({ text: name })) ?? [],
+      universityData?.department.map(({ name }) => ({ text: name, relation: 'departments' })) ?? [],
     showForm: false,
+
   };
 
   addTutor = tutor => {
@@ -97,6 +98,11 @@ export class App extends Component {
       }));
     }
   };
+handleDeleteCard = (id, relation) => {
+  this.setState((prevState)=>({
+    [relation]: prevState[relation].filter(({text})=>text !== id)
+  }))
+}
 
   render() {
     const { tutors, cities, departments, showForm } = this.state;
@@ -136,7 +142,7 @@ export class App extends Component {
           <Section title="Cities" image={CityIcon}>
             <GeneralCardList
               listData={cities}
-              isOpenMenu={this.handleToogleMenu}
+              deleteCard={this.handleDeleteCard}
             />
             {showForm === FORMS.CITY_FORM && (
               <AddItemForm
@@ -155,7 +161,7 @@ export class App extends Component {
           <Section title="Departments" image={DepartmentIcon}>
             <GeneralCardList
               listData={departments}
-              isOpenMenu={this.handleToogleMenu}
+              deleteCard={this.handleDeleteCard}
             />
             {showForm === FORMS.DEPARTMENT_FORM && (
               <AddItemForm
