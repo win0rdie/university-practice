@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/university-practice/static/css/main.1d35e8e2.css",
-    "main.js": "/university-practice/static/js/main.03071473.js",
+    "main.js": "/university-practice/static/js/main.98a6cb52.js",
     "static/media/cities.svg": "/university-practice/static/media/cities.7e91992755f9d3b640efb7ac8c2b6491.svg",
     "static/media/mock-university.svg": "/university-practice/static/media/mock-university.650dfc1db07a57b5376badfdaf40c154.svg",
     "static/media/delete.svg": "/university-practice/static/media/delete.677d38a82de5abc1f9234f87ea3bf592.svg",
@@ -13,10 +13,10 @@
     "static/media/phone.svg": "/university-practice/static/media/phone.c6f983dd4eca048e70183bd671671b90.svg",
     "static/media/mail.svg": "/university-practice/static/media/mail.fcd39ac88773a1300db151e083154d3e.svg",
     "main.1d35e8e2.css.map": "/university-practice/static/css/main.1d35e8e2.css.map",
-    "main.03071473.js.map": "/university-practice/static/js/main.03071473.js.map"
+    "main.98a6cb52.js.map": "/university-practice/static/js/main.98a6cb52.js.map"
   },
   "entrypoints": [
     "static/css/main.1d35e8e2.css",
-    "static/js/main.03071473.js"
+    "static/js/main.98a6cb52.js"
   ]
 }
