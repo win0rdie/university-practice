@@ -52,12 +52,8 @@ export default class GeneralCardItem extends Component {
     this.setState({ showModal: action, showDropdown: false });
   };
 
-  handleEditItem = () => {
-    console.log('editttt');
-  };
-
   render() {
-    const { text, id, relation, deleteCard } = this.props;
+    const { text, id, relation, deleteCard, editCard } = this.props;
     const { showDropdown, showModal, dropDownPosition } = this.state;
 
     return (
@@ -99,7 +95,11 @@ export default class GeneralCardItem extends Component {
           <Modal onClose={this.handleCloseModal}>
             <StyledModalActionContainer>
               <h2>Edit {relation === 'departments' ? 'department' : 'city'}</h2>
-              <AddItemForm onSubmit={this.handleEditItem}></AddItemForm>
+              <AddItemForm
+                onSubmit={editCard}
+                idItem={id}
+                relation={relation}
+              ></AddItemForm>
             </StyledModalActionContainer>
           </Modal>
         )}
