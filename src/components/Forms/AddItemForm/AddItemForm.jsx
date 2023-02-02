@@ -5,19 +5,27 @@ import { Button } from 'components';
 import { ErrMsg } from '../TutorForm/TutorForm.styled';
 import AddIcon from '../../../assets/images/add.svg';
 
-const INITIAL_VALUES = {
-  name: '',
-};
-
 const schemaValidationAddItem = object().shape({
-  name: string().min(2, 'Mininun 2 symbols'),
+  name: string().min(2, 'Mininun 2 symbols').required(),
 });
 
-export default function AddItemForm({ onSubmit, title, placeholder }) {
+export default function AddItemForm({
+  onSubmit,
+  title,
+  placeholder,
+  idItem,
+  relation,
+}) {
+  const INITIAL_VALUES = {
+    name: idItem || '',
+  };
+
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    onSubmit(values.name);
-    console.log(values.name);
+    const data = idItem
+      ? { id: idItem, relation, name: values.name }
+      : values.name;
+    onSubmit(data);
     resetForm();
     setSubmitting(false);
   };
@@ -47,7 +55,11 @@ export default function AddItemForm({ onSubmit, title, placeholder }) {
               </div>
             }
 
-            <Button text="add" image={AddIcon} type="submit" />
+            <Button
+              text={idItem ? 'Save' : 'Add'}
+              image={AddIcon}
+              type="submit"
+            />
           </div>
         </Form>
       )}

@@ -78,6 +78,7 @@ export class App extends Component {
     } else {
       const newCity = {
         text: name,
+        relation: 'cities',
       };
       this.setState(prevState => ({
         cities: [...prevState.cities, newCity],
@@ -102,6 +103,7 @@ export class App extends Component {
     else {
       const newDepartment = {
         text: name,
+        relation: 'departments',
       };
       this.setState(prevState => ({
         departments: [...prevState.departments, newDepartment],
@@ -116,8 +118,21 @@ export class App extends Component {
     }));
   };
 
+  handleEditCard = data => {
+    const { id, relation, name } = data;
+    const elemIndex = this.state[relation].findIndex(item => item.text === id);
+    this.setState(prevState => ({
+      [relation]: [
+        ...prevState[relation].slice(0, elemIndex),
+        { text: name, relation },
+        ...prevState[relation].slice(elemIndex + 1),
+      ],
+    }));
+  };
+
   render() {
     const { tutors, cities, departments, showForm } = this.state;
+    console.log(cities);
 
     return (
       <div className="app">
@@ -155,6 +170,7 @@ export class App extends Component {
             <GeneralCardList
               listData={cities}
               deleteCard={this.handleDeleteCard}
+              editCard={this.handleEditCard}
             />
             {showForm === FORMS.CITY_FORM && (
               <AddItemForm
@@ -174,6 +190,7 @@ export class App extends Component {
             <GeneralCardList
               listData={departments}
               deleteCard={this.handleDeleteCard}
+              editCard={this.handleEditCard}
             />
             {showForm === FORMS.DEPARTMENT_FORM && (
               <AddItemForm
