@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 
 import {
@@ -21,26 +22,24 @@ import CityIcon from '../assets/images/cities.svg';
 import DepartmentIcon from '../assets/images/faculties-emoji.png';
 import AddIcon from '../assets/images/add.svg';
 
+import { useTutors, useCities, useDepartments } from 'hooks';
+
+const BASE_URL = 'https://63e271093e12b193763ffead.mockapi.io';
+
+axios.defaults.baseURL = BASE_URL;
+
 export default function App() {
-  const [tutors, setTutors] = useState(universityData?.tutors ?? []);
-  const [cities, setCities] = useState(
-    universityData?.cities.map(city => ({
-      text: city,
-      relation: 'cities',
-    })) ?? []
-  );
-  const [departments, setDepartments] = useState(
-    universityData?.department.map(({ name }) => ({
-      text: name,
-      relation: 'departments',
-    })) ?? []
-  );
+  const [tutors, setTutors] = useTutors();
+  const [cities, setCities] = useCities();
+  const [departments, setDepartments] = useDepartments();
 
   const [showForm, setShowForm] = useState(null);
 
   const addTutor = tutor => {
-    setTutors([...tutors, tutor]);
-    setShowForm(null);
+    axios.post('/tutors', tutor).then(({ data }) => {
+      setTutors([...tutors, data]);
+      setShowForm(null);
+    });
   };
 
   const deleteTutor = emailInput => {
@@ -59,21 +58,19 @@ export default function App() {
     setShowForm(showForm === formName ? null : formName);
   };
 
-  // const handleToogleMenu = () => {
-  //   console.log('card');
-  // };
-
   const addCity = name => {
-    if (cities.some(city => city.text.toLowerCase() === name.toLowerCase())) {
-      alert('City already exists');
-    } else {
-      const newCity = {
-        text: name,
-        relation: 'cities',
-      };
-      setCities([...cities, newCity]);
-      setShowForm(null);
-    }
+    axios.post('/cities', { text: name }).then(({ data }) => {
+      if (cities.some(city => city.text.toLowerCase() === name.toLowerCase())) {
+        alert('City already exists');
+      } else {
+        const newCity = {
+          ...data,
+          relation: 'cities',
+        };
+        setCities([...cities, newCity]);
+        setShowForm(null);
+      }
+    });
   };
 
   const addDepartment = name => {
