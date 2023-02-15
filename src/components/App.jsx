@@ -24,6 +24,14 @@ import AddIcon from '../assets/images/add.svg';
 
 import { useTutors, useCities, useDepartments } from 'hooks';
 
+import { createCity, deleteCity, updateCity } from 'api/citiesApi/ciitesApi';
+import {
+  createDepartment,
+  deleteDepartment,
+  updateDepartment,
+} from 'api/departmentsApi/departmentsApi';
+import { createTutor, deleteTutor } from 'api/tutorsApi/tutorsApi';
+
 const BASE_URL = 'https://63e271093e12b193763ffead.mockapi.io';
 
 axios.defaults.baseURL = BASE_URL;
@@ -36,14 +44,20 @@ export default function App() {
   const [showForm, setShowForm] = useState(null);
 
   const addTutor = tutor => {
-    axios.post('/tutors', tutor).then(({ data }) => {
+    createTutor(tutor).then(({ data }) => {
       setTutors([...tutors, data]);
       setShowForm(null);
     });
   };
 
-  const deleteTutor = emailInput => {
-    setTutors([...tutors].filter(({ email }) => email !== emailInput));
+  const handleDeleteTutor = id => {
+    deleteTutor(id).then(res => {
+      const deletedId = res.data.id;
+      const renamedTutors = tutors.filter(({ id }) => {
+        return deletedId !== id;
+      });
+      setTutors(renamedTutors);
+    });
   };
 
   const onEdit = () => {
@@ -59,17 +73,17 @@ export default function App() {
   };
 
   const addCity = name => {
-    axios.post('/cities', { text: name }).then(({ data }) => {
-      if (cities.some(city => city.text.toLowerCase() === name.toLowerCase())) {
-        alert('City already exists');
-      } else {
-        const newCity = {
-          ...data,
-          relation: 'cities',
-        };
-        setCities([...cities, newCity]);
-        setShowForm(null);
-      }
+    if (cities.some(city => city.text.toLowerCase() === name.toLowerCase())) {
+      alert('City already exists');
+      return;
+    }
+    createCity({ text: name }).then(({ data }) => {
+      const newCity = {
+        ...data,
+        relation: 'cities',
+      };
+      setCities([...cities, newCity]);
+      setShowForm(null);
     });
   };
 
@@ -80,23 +94,32 @@ export default function App() {
       )
     ) {
       alert('Department already exists');
-    } else {
+      return;
+    }
+    createDepartment({ name }).then(({ data: { id, name } }) => {
       const newDepartment = {
+        id,
         text: name,
         relation: 'departments',
       };
       setDepartments([...departments, newDepartment]);
       setShowForm(null);
-    }
+    });
   };
 
   const handleDeleteCard = (id, relation) => {
     if (relation === 'cities') {
-      const newCitiesArray = cities.filter(({ text }) => text !== id);
-      setCities(newCitiesArray);
+      deleteCity(id).then(res => {
+        const resId = res.data.id;
+        const newCitiesArray = cities.filter(el => el.id !== resId);
+        setCities(newCitiesArray);
+      });
     } else {
-      const newDepartmentsArray = departments.filter(({ text }) => text !== id);
-      setDepartments(newDepartmentsArray);
+      deleteDepartment(id).then(res => {
+        const resId = res.data.id;
+        const newDepartmentsArray = departments.filter(el => el.id !== resId);
+        setDepartments(newDepartmentsArray);
+      });
     }
   };
 
@@ -104,19 +127,28 @@ export default function App() {
     const { id, relation, name } = data;
 
     if (relation === 'cities') {
-      const indexCity = cities.findIndex(item => item.text === id);
-      setCities(prev => [
-        ...prev.slice(0, indexCity),
-        { text: name, relation },
-        ...prev.slice(indexCity + 1),
-      ]);
+      updateCity(id, { id, text: name }).then(res => {
+        const updateId = res.data.id;
+        const indexCity = cities.findIndex(item => item.id === updateId);
+        setCities(prev => [
+          ...prev.slice(0, indexCity),
+          { text: res.data.text, relation, id: updateId },
+          ...prev.slice(indexCity + 1),
+        ]);
+      });
     } else {
-      const indexDepartmnets = departments.findIndex(item => item.text === id);
-      setDepartments(prev => [
-        ...prev.slice(0, indexDepartmnets),
-        { text: name, relation },
-        ...prev.slice(indexDepartmnets + 1),
-      ]);
+      updateDepartment(id, { id, name }).then(res => {
+        const updateId = res.data.id;
+
+        const indexDepartmnets = departments.findIndex(
+          item => item.id === updateId
+        );
+        setDepartments(prev => [
+          ...prev.slice(0, indexDepartmnets),
+          { text: res.data.name, id: updateId, relation },
+          ...prev.slice(indexDepartmnets + 1),
+        ]);
+      });
     }
   };
 
@@ -137,7 +169,7 @@ export default function App() {
         </Section>
 
         <Section title="Tutors" image={TutorIcon}>
-          <TutorsList tutors={tutors} deleteTutor={deleteTutor} />
+          <TutorsList tutors={tutors} deleteTutor={handleDeleteTutor} />
           {showForm === FORMS.TUTOR_FORM && <TutorForm addTutor={addTutor} />}
           <Button
             text={showForm === FORMS.TUTOR_FORM ? 'Close form' : 'Add tutor'}

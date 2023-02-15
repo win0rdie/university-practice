@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default function TutorsList({ tutors, deleteTutor }) {
   return tutors.map(tutor => (
-    <TutorsItem key={tutor.phone} {...tutor} deleteTutor={deleteTutor} />
+    <TutorsItem key={tutor.id} {...tutor} deleteTutor={deleteTutor} />
   ));
 }
 

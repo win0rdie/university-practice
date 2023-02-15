@@ -14,6 +14,7 @@ export default function TutorsItem({
   options,
   email,
   deleteTutor,
+  id,
 }) {
   return (
     <Paper>
@@ -41,7 +42,7 @@ export default function TutorsItem({
           <p>{options}</p>
         </ColumnItem>
         <ColumnItem>
-          <button type="button" onClick={() => deleteTutor(email)}>
+          <button type="button" onClick={() => deleteTutor(id)}>
             Delete
           </button>
         </ColumnItem>
@@ -58,4 +59,5 @@ TutorsItem.propTypes = {
   city: PropTypes.string.isRequired,
   options: PropTypes.string,
   email: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };

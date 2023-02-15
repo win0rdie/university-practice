@@ -15,9 +15,11 @@ export default function AddItemForm({
   placeholder,
   idItem,
   relation,
+  textItem,
+  closeModal,
 }) {
   const INITIAL_VALUES = {
-    name: idItem || '',
+    name: textItem || '',
   };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
@@ -26,6 +28,7 @@ export default function AddItemForm({
       ? { id: idItem, relation, name: values.name }
       : values.name;
     onSubmit(data);
+    closeModal();
     resetForm();
     setSubmitting(false);
   };
