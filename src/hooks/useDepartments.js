@@ -1,19 +1,22 @@
+import { fetchDepartments } from 'api/departmentsApi/departmentsApi';
 import { useState, useEffect } from 'react';
-import universityData from '../constants/universityData.json';
 
 export default function useDepartments() {
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem(
-      'departments',
-      JSON.stringify(
-        universityData?.department.map(({ name }) => ({
-          text: name,
-          relation: 'departments',
-        }))
-      )
-    );
+    fetchDepartments().then(({ data: department }) => {
+      localStorage.setItem(
+        'departments',
+        JSON.stringify(
+          department.map(({ name, id }) => ({
+            text: name,
+            id,
+            relation: 'departments',
+          }))
+        )
+      );
+    });
 
     const departmentFromLS = JSON.parse(localStorage.getItem('departments'));
     departmentFromLS ? setDepartments(departmentFromLS) : setDepartments([]);

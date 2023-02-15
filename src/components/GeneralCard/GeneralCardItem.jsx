@@ -96,6 +96,8 @@ export default function GeneralCardItem({
               onSubmit={editCard}
               idItem={id}
               relation={relation}
+              textItem={text}
+              closeModal={handleCloseModal}
             ></AddItemForm>
           </StyledModalActionContainer>
         </Modal>
