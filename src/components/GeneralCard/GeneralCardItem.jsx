@@ -13,6 +13,7 @@ import {
   StyledContainer,
   StyledItem,
 } from './GeneralCardItem.styled';
+import { useNavigate } from 'react-router-dom';
 
 export default function GeneralCardItem({
   text,
@@ -29,6 +30,12 @@ export default function GeneralCardItem({
     clientWidth: 0,
     clientHeight: 0,
   });
+  const navigate = useNavigate();
+
+  const onClickToId = () => {
+    if (relation !== 'departments') return;
+    navigate(`/departments/${id}`);
+  };
 
   const handleShowDropDown = e => {
     setShowDropdown(true);
@@ -54,7 +61,7 @@ export default function GeneralCardItem({
   };
 
   return (
-    <Paper>
+    <Paper onClick={onClickToId}>
       <StyledItem>
         <span>{text}</span>
         <StyledBtnMenu onClick={handleShowDropDown}>

@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 export default function MenuItem({ image, link, name }) {
   return (
     <li>
-      <a href={link}>
+      <NavLink to={link}>
         {image} {name}
-      </a>
+      </NavLink>
     </li>
   );
 }

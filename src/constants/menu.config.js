@@ -6,7 +6,7 @@ import { IconContext } from 'react-icons';
 export const menuConfig = [
   {
     name: 'University',
-    link: '/',
+    link: 'university',
     image: (
       <IconContext.Provider
         value={{
@@ -21,7 +21,7 @@ export const menuConfig = [
 
   {
     name: 'Departments',
-    link: '/',
+    link: 'departments',
     image: (
       <IconContext.Provider
         value={{

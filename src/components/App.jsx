@@ -1,29 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
-
-import {
-  AddItemForm,
-  Button,
-  GeneralCardList,
-  Main,
-  Paper,
-  Section,
-  Sidebar,
-  TutorForm,
-  TutorsList,
-  UniversityCard,
-} from '../components';
-import FORMS from 'constants/form';
-
-import universityData from '../constants/universityData';
-
-import TutorIcon from '../assets/images/teachers-emoji.png';
-import CityIcon from '../assets/images/cities.svg';
-import DepartmentIcon from '../assets/images/faculties-emoji.png';
-import AddIcon from '../assets/images/add.svg';
-
+import { Suspense, useEffect, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Main, Sidebar } from '../components';
 import { useTutors, useCities, useDepartments } from 'hooks';
-
 import { createCity, deleteCity, updateCity } from 'api/citiesApi/ciitesApi';
 import {
   createDepartment,
@@ -31,17 +10,29 @@ import {
   updateDepartment,
 } from 'api/departmentsApi/departmentsApi';
 import { createTutor, deleteTutor } from 'api/tutorsApi/tutorsApi';
+import { DepartmentsPages, NotFound, UniversityPages } from 'pages';
+import DepartmentDetails from 'pages/Departments/DepartmentsDetails/DepartmentDetails';
+import DepartmentsDescription from 'pages/Departments/DepartmentsDetails/DepartmentsDescription';
+import DepartmentsHistory from 'pages/Departments/DepartmentsDetails/DepartmentsHistory';
 
-const BASE_URL = 'https://63e271093e12b193763ffead.mockapi.io';
+const BASE_URL = 'https://63e271093e12b 193763ffead.mockapi.io';
 
 axios.defaults.baseURL = BASE_URL;
 
-export default function App() {
+function App() {
   const [tutors, setTutors] = useTutors();
   const [cities, setCities] = useCities();
   const [departments, setDepartments] = useDepartments();
-
   const [showForm, setShowForm] = useState(null);
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (pathname === '/') {
+      navigate('university');
+    }
+  }, [navigate, pathname]);
 
   const addTutor = tutor => {
     createTutor(tutor).then(({ data }) => {
@@ -157,281 +148,57 @@ export default function App() {
       <Sidebar />
 
       <Main>
-        <Section title="Information about university" isRightPosition isColumn>
-          <UniversityCard
-            name={universityData.name}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          ></UniversityCard>
-          <Paper>
-            <span>{universityData.description}</span>
-          </Paper>
-        </Section>
-
-        <Section title="Tutors" image={TutorIcon}>
-          <TutorsList tutors={tutors} deleteTutor={handleDeleteTutor} />
-          {showForm === FORMS.TUTOR_FORM && <TutorForm addTutor={addTutor} />}
-          <Button
-            text={showForm === FORMS.TUTOR_FORM ? 'Close form' : 'Add tutor'}
-            image={AddIcon}
-            action={() => handleShowForm(FORMS.TUTOR_FORM)}
-          />
-        </Section>
-
-        <Section title="Cities" image={CityIcon}>
-          <GeneralCardList
-            listData={cities}
-            deleteCard={handleDeleteCard}
-            editCard={handleEditCard}
-          />
-          {showForm === FORMS.CITY_FORM && (
-            <AddItemForm
-              title="add city"
-              placeholder="City"
-              onSubmit={addCity}
+        <Suspense fallback={<span>Loading...</span>}>
+          <Routes>
+            <Route
+              path="/university"
+              element={
+                <UniversityPages
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  showForm={showForm}
+                  handleDeleteTutor={handleDeleteTutor}
+                  handleShowForm={handleShowForm}
+                  handleDeleteCard={handleDeleteCard}
+                  handleEditCard={handleEditCard}
+                  cities={cities}
+                  tutors={tutors}
+                  addCity={addCity}
+                  addTutor={addTutor}
+                />
+              }
             />
-          )}
-          <Button
-            text={showForm === FORMS.CITY_FORM ? 'Close form' : 'Add city'}
-            image={AddIcon}
-            action={() => handleShowForm(FORMS.CITY_FORM)}
-          />
-        </Section>
-
-        <Section title="Departments" image={DepartmentIcon}>
-          <GeneralCardList
-            listData={departments}
-            deleteCard={handleDeleteCard}
-            editCard={handleEditCard}
-          />
-          {showForm === FORMS.DEPARTMENT_FORM && (
-            <AddItemForm
-              title="add departments"
-              placeholder="Departments"
-              onSubmit={addDepartment}
-            />
-          )}
-          <Button
-            text={
-              showForm === FORMS.DEPARTMENT_FORM
-                ? 'Close form'
-                : 'Add department'
-            }
-            image={AddIcon}
-            action={() => handleShowForm(FORMS.DEPARTMENT_FORM)}
-          />
-        </Section>
+            <Route path="/departments">
+              <Route
+                index
+                element={
+                  <DepartmentsPages
+                    departments={departments}
+                    handleDeleteCard={handleDeleteCard}
+                    handleEditCard={handleEditCard}
+                    showForm={showForm}
+                    addDepartment={addDepartment}
+                    handleShowForm={handleShowForm}
+                  />
+                }
+              />
+              <Route
+                path=":departmentId"
+                element={<DepartmentDetails departments={departments} />}
+              >
+                <Route
+                  path="description"
+                  element={<DepartmentsDescription />}
+                />
+                <Route path="history" element={<DepartmentsHistory />} />
+              </Route>
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Main>
     </div>
   );
 }
 
-// import { Component } from 'react';
-// import {
-//   AddItemForm,
-//   Button,
-//   GeneralCardList,
-//   Main,
-//   Paper,
-//   Section,
-//   Sidebar,
-//   TutorForm,
-//   TutorsList,
-//   UniversityCard,
-// } from '../components';
-// import universityData from '../constants/universityData';
-// import TutorIcon from '../assets/images/teachers-emoji.png';
-// import CityIcon from '../assets/images/cities.svg';
-// import DepartmentIcon from '../assets/images/faculties-emoji.png';
-// import AddIcon from '../assets/images/add.svg';
-// import FORMS from 'constants/form';
-
-// export class App extends Component {
-//   state = {
-//     tutors: universityData?.tutors ?? [],
-//     cities:
-//       universityData?.cities.map(city => ({
-//         text: city,
-//         relation: 'cities',
-//       })) ?? [],
-//     departments:
-//       universityData?.department.map(({ name }) => ({
-//         text: name,
-//         relation: 'departments',
-//       })) ?? [],
-//     showForm: null,
-//   };
-//   addTutor = tutor => {
-//     this.setState(({ tutors }) => ({
-//       tutors: [...tutors, tutor],
-//       showForm: null,
-//     }));
-//   };
-
-//   deleteTutor = emailInput => {
-//     this.setState(({ tutors }) => {
-//       console.log([...tutors]);
-//       return {
-//         tutors: [...tutors].filter(({ email }) => email !== emailInput),
-//       };
-//     });
-//   };
-
-//   onEdit = () => {
-//     console.log('edit');
-//   };
-
-//   onDelete = () => {
-//     console.log('delete');
-//   };
-
-//   handleShowForm = formName => {
-//     this.setState(prevState => ({
-//       showForm: prevState.showForm === formName ? null : formName,
-//     }));
-//   };
-
-//   handleToogleMenu = () => {
-//     console.log('card');
-//   };
-
-//   addCity = name => {
-//     if (
-//       this.state.cities.some(
-//         city => city.text.toLowerCase() === name.toLowerCase()
-//       )
-//     ) {
-//       alert('City already exists');
-//     } else {
-//       const newCity = {
-//         text: name,
-//         relation: 'cities',
-//       };
-//       this.setState(prevState => ({
-//         cities: [...prevState.cities, newCity],
-//         showForm: null,
-//       }));
-//     }
-//   };
-
-//   addDepartment = name => {
-//     if (
-//       this.state.departments.some(
-//         department => department.text.toLowerCase() === name.toLowerCase()
-//       )
-//     ) {
-//       alert('Department already exists');
-//     } else {
-//       const newDepartment = {
-//         text: name,
-//         relation: 'departments',
-//       };
-//       this.setState(prevState => ({
-//         departments: [...prevState.departments, newDepartment],
-//         showForm: null,
-//       }));
-//     }
-//   };
-
-//   handleDeleteCard = (id, relation) => {
-//     this.setState(prevState => ({
-//       [relation]: prevState[relation].filter(({ text }) => text !== id),
-//     }));
-//   };
-
-//   handleEditCard = data => {
-//     const { id, relation, name } = data;
-//     const elemIndex = this.state[relation].findIndex(item => item.text === id);
-//     this.setState(prevState => ({
-//       [relation]: [
-//         ...prevState[relation].slice(0, elemIndex),
-//         { text: name, relation },
-//         ...prevState[relation].slice(elemIndex + 1),
-//       ],
-//     }));
-//   };
-
-//   render() {
-//     const { tutors, cities, departments, showForm } = this.state;
-//     console.log(cities);
-
-//     return (
-//       <div className="app">
-//         <Sidebar />
-
-//         <Main>
-//           <Section
-//             title="Information about university"
-//             isRightPosition
-//             isColumn
-//           >
-//             <UniversityCard
-//               name={universityData.name}
-//               onEdit={this.onEdit}
-//               onDelete={this.onDelete}
-//             ></UniversityCard>
-//             <Paper>
-//               <span>{universityData.description}</span>
-//             </Paper>
-//           </Section>
-
-//           <Section title="Tutors" image={TutorIcon}>
-//             <TutorsList tutors={tutors} deleteTutor={this.deleteTutor} />
-//             {showForm === FORMS.TUTOR_FORM && (
-//               <TutorForm addTutor={this.addTutor} />
-//             )}
-//             <Button
-//               text={showForm === FORMS.TUTOR_FORM ? 'Close form' : 'Add tutor'}
-//               image={AddIcon}
-//               action={() => this.handleShowForm(FORMS.TUTOR_FORM)}
-//             />
-//           </Section>
-
-//           <Section title="Cities" image={CityIcon}>
-//             <GeneralCardList
-//               listData={cities}
-//               deleteCard={this.handleDeleteCard}
-//               editCard={this.handleEditCard}
-//             />
-//             {showForm === FORMS.CITY_FORM && (
-//               <AddItemForm
-//                 title="add city"
-//                 placeholder="City"
-//                 onSubmit={this.addCity}
-//               />
-//             )}
-//             <Button
-//               text={showForm === FORMS.CITY_FORM ? 'Close form' : 'Add city'}
-//               image={AddIcon}
-//               action={() => this.handleShowForm(FORMS.CITY_FORM)}
-//             />
-//           </Section>
-
-//           <Section title="Departments" image={DepartmentIcon}>
-//             <GeneralCardList
-//               listData={departments}
-//               deleteCard={this.handleDeleteCard}
-//               editCard={this.handleEditCard}
-//             />
-//             {showForm === FORMS.DEPARTMENT_FORM && (
-//               <AddItemForm
-//                 title="add departments"
-//                 placeholder="Departments"
-//                 onSubmit={this.addDepartment}
-//               />
-//             )}
-//             <Button
-//               text={
-//                 showForm === FORMS.DEPARTMENT_FORM
-//                   ? 'Close form'
-//                   : 'Add department'
-//               }
-//               image={AddIcon}
-//               action={() => this.handleShowForm(FORMS.DEPARTMENT_FORM)}
-//             />
-//           </Section>
-//         </Main>
-//       </div>
-//     );
-//   }
-// }
+export default App;
